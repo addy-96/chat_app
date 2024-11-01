@@ -2,10 +2,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_application/core/custom_snack.dart';
+import 'package:chat_application/provider/image_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AuthProvider with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
@@ -63,7 +65,7 @@ class AuthProvider with ChangeNotifier {
       log('user loogged in ${currentUser!.uid}');
       notifyListeners();
     } on FirebaseAuthException catch (err) {
-            log(err.message.toString());
+      log(err.message.toString());
 
       getSnack(err.message.toString(), context, snackType.failure);
     }
@@ -74,9 +76,11 @@ class AuthProvider with ChangeNotifier {
   ) async {
     try {
       final response = await _auth.signOut();
-      notifyListeners();
+      final imageProvider =
+          Provider.of<ProfileImageProvider>(context, listen: false);
+      imageProvider.selectedImage = null;
     } on FirebaseAuthException catch (err) {
-            log(err.message.toString());
+      log(err.message.toString());
 
       getSnack(err.message.toString(), context, snackType.failure);
     }
