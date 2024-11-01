@@ -41,11 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<Map<String, dynamic>> _getUserChats(String chatId) async {
     final chatDoc =
         await FirebaseFirestore.instance.collection('chats').doc(chatId).get();
-    log('----------------------');
     final chatData = chatDoc.data();
-    log(chatData.toString());
-    log('----------------------');
-
     final users = chatData!['users'] as List<dynamic>;
     final receiverId = users.firstWhere((id) => id != loggedInUser!.uid);
     final userDoc = await FirebaseFirestore.instance
@@ -61,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'userData': userData
     };
 
-    log('map : ${result.toString()}\n\n');
+  
 
     return result;
   }
